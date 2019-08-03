@@ -13,6 +13,7 @@ require (
 	github.com/edsrzf/mmap-go v1.0.0 // indirect
 	github.com/huichen/murmur v0.0.0-20130808212358-e0489551cf51
 	github.com/huichen/sego v0.0.0-20180617034105-3f3c8a8cfacc
+	github.com/issue9/assert v1.3.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
 	golang.org/x/sys v0.0.0-20190801041406-cbf593c0f2f3 // indirect
 )

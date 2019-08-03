@@ -22,6 +22,8 @@ github.com/huichen/murmur v0.0.0-20130808212358-e0489551cf51 h1:86ZSBmeBzG7dWW2r
 github.com/huichen/murmur v0.0.0-20130808212358-e0489551cf51/go.mod h1:UKrDR4kaPWAPk8cJGrHoTgyI8OmHPNDjUxx/aOK4ySU=
 github.com/huichen/sego v0.0.0-20180617034105-3f3c8a8cfacc h1:3LXYtoxQGFSjIL5ZJAn4PceSpwRohuTKYL1W4kJ7G8g=
 github.com/huichen/sego v0.0.0-20180617034105-3f3c8a8cfacc/go.mod h1:+/Bm7uk1bnJJMi9l6P88FgHeGtscOQiYbxW1j+BmgBY=
+github.com/issue9/assert v1.3.3 h1:3Xz5rGafXcaOpz7x6X2X3kBQVYxs1l9HFHSwmuDQ3KM=
+github.com/issue9/assert v1.3.3/go.mod h1:9Ger+iz8X7r1zMYYwEhh++2wMGWcNN2oVI+zIQXxcio=
 github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 h1:HQagqIiBmr8YXawX/le3+O26N+vPPC1PtjaF3mwnook=
 github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
 golang.org/x/sys v0.0.0-20190801041406-cbf593c0f2f3 h1:4y9KwBHBgBNwDbtu44R5o1fdOCQUEXhbk/P4A9WmJq0=

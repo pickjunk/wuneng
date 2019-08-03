@@ -42,6 +42,9 @@ type EngineInitOptions struct {
 	// 停用词文件
 	StopTokenFile string
 
+	// 同义词文件
+	SynonymTokenFile string
+
 	// 分词器线程数
 	NumSegmenterThreads int
 

@@ -38,6 +38,7 @@ type Engine struct {
 	rankers    []core.Ranker
 	segmenter  sego.Segmenter
 	stopTokens StopTokens
+	synonyms   *Synonyms
 
 	// 建立索引器使用的通信通道
 	segmenterChannel         chan segmenterRequest
@@ -70,6 +71,10 @@ func (engine *Engine) Init(options types.EngineInitOptions) {
 
 		// 初始化停用词
 		engine.stopTokens.Init(options.StopTokenFile)
+
+		// 初始化同义词
+		engine.synonyms = &Synonyms{}
+		engine.synonyms.Init(options.SynonymTokenFile)
 	}
 
 	// 初始化索引器和排序器

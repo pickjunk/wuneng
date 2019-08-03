@@ -46,6 +46,16 @@ func (engine *Engine) segmenterWorker() {
 			numTokens = len(request.data.Tokens)
 		}
 
+		// 添加同义词
+		for key, pos := range tokensMap {
+			if synonyms, ok := engine.synonyms.Synonyms[key]; ok {
+				for _, ss := range *synonyms.synonymGroup {
+					tokensMap[ss.text] = pos
+				}
+				numTokens += len(*synonyms.synonymGroup) - 1
+			}
+		}
+
 		// 加入非分词的文档标签
 		for _, label := range request.data.Labels {
 			if !engine.initOptions.NotUsingSegmenter {

@@ -433,3 +433,51 @@ func TestSearchWithin(t *testing.T) {
 	utils.Expect(t, "100", int(outputs.Docs[1].Scores[0]*1000))
 	utils.Expect(t, "[0 15]", outputs.Docs[1].TokenSnippetLocations)
 }
+
+func TestEngineIndexDocumentWithSynonyms(t *testing.T) {
+	var engine Engine
+	engine.Init(types.EngineInitOptions{
+		SegmenterDictionaries: "../test/test_dict.txt",
+		SynonymTokenFile:      "../test/test_synonym.txt",
+		DefaultRankOptions: &types.RankOptions{
+			ScoringCriteria: TestScoringCriteria{},
+		},
+	})
+
+	docID := uint64(1)
+	engine.IndexDocument(docID, types.DocumentIndexData{
+		Content: "百度",
+		Fields:  ScoringFields{0, 9, 1},
+	}, false)
+	docID++
+	engine.IndexDocument(docID, types.DocumentIndexData{
+		Content: "",
+		Tokens: []types.TokenData{
+			{Text: "包括我", Locations: []int{0}},
+		},
+		Fields: ScoringFields{0, 9, 1},
+	}, false)
+	docID++
+	engine.IndexDocument(docID, types.DocumentIndexData{
+		Content: "baidu都是沙雕",
+		Fields:  ScoringFields{0, 1, 1},
+	}, false)
+	engine.FlushIndex()
+
+	outputs := engine.Search(types.SearchRequest{Text: "百度"})
+	utils.Expect(t, "1", len(outputs.Tokens))
+	utils.Expect(t, "百度", outputs.Tokens[0])
+
+	utils.Expect(t, "2", len(outputs.Docs))
+	utils.Expect(t, "1", outputs.Docs[0].DocID)
+	utils.Expect(t, "3", outputs.Docs[1].DocID)
+
+	outputs = engine.Search(types.SearchRequest{Text: "十三亿莆田广告"})
+	utils.Expect(t, "3", len(outputs.Tokens))
+	utils.Expect(t, "十三亿", outputs.Tokens[0])
+	utils.Expect(t, "莆田", outputs.Tokens[1])
+	utils.Expect(t, "广告", outputs.Tokens[2])
+
+	utils.Expect(t, "1", len(outputs.Docs))
+	utils.Expect(t, "3", outputs.Docs[0].DocID)
+}
