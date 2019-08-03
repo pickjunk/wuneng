@@ -1,2 +1,2 @@
 # wuneng
-base on huichen/wukong, support synonyms, prettier log(with bgo)
+base on pickjunk/wuneng, support synonyms, prettier log(with bgo)
