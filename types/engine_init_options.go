@@ -1,7 +1,6 @@
 package types
 
 import (
-	"log"
 	"runtime"
 )
 
@@ -80,7 +79,7 @@ type EngineInitOptions struct {
 func (options *EngineInitOptions) Init() {
 	if !options.NotUsingSegmenter {
 		if options.SegmenterDictionaries == "" {
-			log.Fatal("字典文件不能为空")
+			log.Panic("字典文件不能为空")
 		}
 	}
 

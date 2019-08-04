@@ -3,7 +3,6 @@ package engine
 import (
 	"bufio"
 	"encoding/json"
-	"log"
 	"os"
 	"strings"
 )
@@ -37,7 +36,7 @@ func (sy *Synonyms) Init(synonymsTokenFile string) {
 	file, err := os.Open(synonymsTokenFile)
 	defer file.Close()
 	if err != nil {
-		log.Fatal("Open stop token file error: ", err)
+		log.Panic("Open stop token file error: ", err)
 	}
 
 	scanner := bufio.NewScanner(file)

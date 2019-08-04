@@ -2,7 +2,6 @@ package engine
 
 import (
 	"bufio"
-	"log"
 	"os"
 )
 
@@ -22,7 +21,7 @@ func (st *StopTokens) Init(stopTokenFile string) {
 
 	file, err := os.Open(stopTokenFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 	defer file.Close()
 

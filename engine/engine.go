@@ -2,17 +2,19 @@ package engine
 
 import (
 	"fmt"
-	"log"
 	"runtime"
 	"sort"
 	"sync/atomic"
 	"time"
 
+	"github.com/cloudfoundry/bytefmt"
 	"github.com/huichen/murmur"
 	"github.com/huichen/sego"
 	"github.com/pickjunk/wuneng/core"
 	"github.com/pickjunk/wuneng/types"
 	"github.com/pickjunk/wuneng/utils"
+	"github.com/shirou/gopsutil/mem"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -59,7 +61,7 @@ func (engine *Engine) Init(options types.EngineInitOptions) {
 
 	// 初始化初始参数
 	if engine.initialized {
-		log.Fatal("请勿重复初始化引擎")
+		log.Panic("请勿重复初始化引擎")
 	}
 	options.Init()
 	engine.initOptions = options
@@ -167,7 +169,7 @@ func (engine *Engine) IndexDocument(docID uint64, data types.DocumentIndexData, 
 func (engine *Engine) internalIndexDocument(
 	docID uint64, data types.DocumentIndexData, forceUpdate bool) {
 	if !engine.initialized {
-		log.Fatal("必须先初始化引擎")
+		log.Panic("必须先初始化引擎")
 	}
 
 	if docID != 0 {
@@ -193,7 +195,7 @@ func (engine *Engine) internalIndexDocument(
 //         如果立刻调用Search可能无法查询到这个文档。强制刷新索引请调用FlushIndex函数。
 func (engine *Engine) RemoveDocument(docID uint64, forceUpdate bool) {
 	if !engine.initialized {
-		log.Fatal("必须先初始化引擎")
+		log.Panic("必须先初始化引擎")
 	}
 
 	if docID != 0 {
@@ -214,7 +216,7 @@ func (engine *Engine) RemoveDocument(docID uint64, forceUpdate bool) {
 // Search 查找满足搜索条件的文档，此函数线程安全
 func (engine *Engine) Search(request types.SearchRequest) (output types.SearchResponse) {
 	if !engine.initialized {
-		log.Fatal("必须先初始化引擎")
+		log.Panic("必须先初始化引擎")
 	}
 
 	var rankOptions types.RankOptions
@@ -331,6 +333,20 @@ func (engine *Engine) Search(request types.SearchRequest) (output types.SearchRe
 	return
 }
 
+// MemoryUsage 打印内存使用率
+func (engine *Engine) MemoryUsage() {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	v, _ := mem.VirtualMemory()
+
+	log.WithFields(logrus.Fields{
+		"heap":       bytefmt.ByteSize(m.Alloc),
+		"sys":        bytefmt.ByteSize(m.Sys),
+		"usage":      fmt.Sprintf("%.2f%%", float64(m.Sys)/float64(v.Total)),
+		"totalUsage": fmt.Sprintf("%.2f%%", v.UsedPercent),
+	}).Info("memory usage")
+}
+
 // FlushIndex 阻塞等待直到所有索引添加完毕
 func (engine *Engine) FlushIndex() {
 	for {
@@ -346,6 +362,7 @@ func (engine *Engine) FlushIndex() {
 	for {
 		runtime.Gosched()
 		if engine.numForceUpdatingRequests*uint64(engine.initOptions.NumShards) == engine.numDocumentsForceUpdated {
+			engine.MemoryUsage()
 			return
 		}
 	}
