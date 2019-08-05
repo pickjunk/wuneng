@@ -357,6 +357,18 @@ func (engine *Engine) Search(request types.SearchRequest) (output types.SearchRe
 	return
 }
 
+// Segment 分词
+func (engine *Engine) Segment(text string) (tokens []string) {
+	segments := engine.segmenter.Segment([]byte(text))
+	for _, s := range segments {
+		token := s.Token().Text()
+		if !engine.stopTokens.IsStopToken(token) {
+			tokens = append(tokens, s.Token().Text())
+		}
+	}
+	return
+}
+
 // MemoryUsage 打印内存使用率
 func (engine *Engine) MemoryUsage() {
 	var m runtime.MemStats

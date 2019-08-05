@@ -494,3 +494,26 @@ func TestEngineIndexDocumentWithSynonyms(t *testing.T) {
 	utils.Expect(t, "1", len(outputs.Docs))
 	utils.Expect(t, "3", outputs.Docs[0].DocID)
 }
+
+func TestEngineSegment(t *testing.T) {
+	var engine Engine
+	engine.Init(types.EngineInitOptions{
+		SegmenterDictionaries: "../test/test_dict.txt",
+		StopTokenFile: "../test/test_stop.txt",
+	})
+	defer engine.Shutdown()
+
+	outputs := engine.Segment("百度")
+	utils.Expect(t, "1", len(outputs))
+	utils.Expect(t, "百度", outputs[0])
+
+	outputs = engine.Segment("十三亿莆田广告")
+	utils.Expect(t, "3", len(outputs))
+	utils.Expect(t, "十三亿", outputs[0])
+	utils.Expect(t, "莆田", outputs[1])
+	utils.Expect(t, "广告", outputs[2])
+
+	outputs = engine.Segment("hello十三world")
+	utils.Expect(t, "1", len(outputs))
+	utils.Expect(t, "十三", outputs[0])
+}
