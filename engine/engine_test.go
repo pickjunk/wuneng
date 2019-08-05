@@ -94,6 +94,7 @@ func TestEngineIndexDocument(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -130,6 +131,7 @@ func TestReverseOrder(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -155,6 +157,7 @@ func TestOffsetAndMaxOutputs(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -188,6 +191,7 @@ func TestSearchWithCriteria(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -209,6 +213,7 @@ func TestCompactIndex(t *testing.T) {
 			ScoringCriteria: TestScoringCriteria{},
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -244,6 +249,7 @@ func TestFrequenciesIndex(t *testing.T) {
 			IndexType: types.FrequenciesIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -265,6 +271,7 @@ func TestRemoveDocument(t *testing.T) {
 			ScoringCriteria: TestScoringCriteria{},
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 	engine.RemoveDocument(5, false)
@@ -298,6 +305,7 @@ func TestEngineIndexDocumentWithTokens(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	docID := uint64(1)
 	engine.IndexDocument(docID, types.DocumentIndexData{
@@ -351,12 +359,14 @@ func TestEngineIndexDocumentWithContentAndLabels(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine1.Shutdown()
 	engine2.Init(types.EngineInitOptions{
 		SegmenterDictionaries: "../test/test_dict.txt",
 		IndexerInitOptions: &types.IndexerInitOptions{
 			IndexType: types.DocIDsIndex,
 		},
 	})
+	defer engine2.Shutdown()
 
 	addDocsWithLabels(&engine1)
 	addDocsWithLabels(&engine2)
@@ -385,6 +395,7 @@ func TestCountDocsOnly(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 	engine.RemoveDocument(5, false)
@@ -410,6 +421,7 @@ func TestSearchWithin(t *testing.T) {
 			IndexType: types.LocationsIndex,
 		},
 	})
+	defer engine.Shutdown()
 
 	AddDocs(&engine)
 
@@ -443,6 +455,7 @@ func TestEngineIndexDocumentWithSynonyms(t *testing.T) {
 			ScoringCriteria: TestScoringCriteria{},
 		},
 	})
+	defer engine.Shutdown()
 
 	docID := uint64(1)
 	engine.IndexDocument(docID, types.DocumentIndexData{

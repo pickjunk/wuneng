@@ -27,26 +27,38 @@ type rankerRemoveDocRequest struct {
 
 func (engine *Engine) rankerAddDocWorker(shard int) {
 	for {
-		request := <-engine.rankerAddDocChannels[shard]
-		engine.rankers[shard].AddDoc(request.docID, request.fields)
+		select {
+		case <-engine.shutdownChannel:
+			return
+		case request := <-engine.rankerAddDocChannels[shard]:
+			engine.rankers[shard].AddDoc(request.docID, request.fields)
+		}
 	}
 }
 
 func (engine *Engine) rankerRankWorker(shard int) {
 	for {
-		request := <-engine.rankerRankChannels[shard]
-		if request.options.MaxOutputs != 0 {
-			request.options.MaxOutputs += request.options.OutputOffset
+		select {
+		case <-engine.shutdownChannel:
+			return
+		case request := <-engine.rankerRankChannels[shard]:
+			if request.options.MaxOutputs != 0 {
+				request.options.MaxOutputs += request.options.OutputOffset
+			}
+			request.options.OutputOffset = 0
+			outputDocs, numDocs := engine.rankers[shard].Rank(request.docs, request.options, request.countDocsOnly)
+			request.rankerReturnChannel <- rankerReturnRequest{docs: outputDocs, numDocs: numDocs}
 		}
-		request.options.OutputOffset = 0
-		outputDocs, numDocs := engine.rankers[shard].Rank(request.docs, request.options, request.countDocsOnly)
-		request.rankerReturnChannel <- rankerReturnRequest{docs: outputDocs, numDocs: numDocs}
 	}
 }
 
 func (engine *Engine) rankerRemoveDocWorker(shard int) {
 	for {
-		request := <-engine.rankerRemoveDocChannels[shard]
-		engine.rankers[shard].RemoveDoc(request.docID)
+		select {
+		case <-engine.shutdownChannel:
+			return
+		case request := <-engine.rankerRemoveDocChannels[shard]:
+			engine.rankers[shard].RemoveDoc(request.docID)
+		}
 	}
 }

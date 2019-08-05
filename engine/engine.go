@@ -52,6 +52,9 @@ type Engine struct {
 	indexerLookupChannels   []chan indexerLookupRequest
 	rankerRankChannels      []chan rankerRankRequest
 	rankerRemoveDocChannels []chan rankerRemoveDocRequest
+
+	// 引擎退出的通信信道
+	shutdownChannel chan bool
 }
 
 // Init 初始化搜索引擎，拉起所有worker
@@ -130,6 +133,10 @@ func (engine *Engine) Init(options types.EngineInitOptions) {
 			options.RankerBufferLength)
 	}
 
+	// 初始化退出通道
+	engine.shutdownChannel = make(
+		chan bool, options.NumSegmenterThreads+6*options.NumShards)
+
 	// 启动分词器
 	for iThread := 0; iThread < options.NumSegmenterThreads; iThread++ {
 		go engine.segmenterWorker()
@@ -147,6 +154,23 @@ func (engine *Engine) Init(options types.EngineInitOptions) {
 		}
 		for i := 0; i < options.NumRankerThreadsPerShard; i++ {
 			go engine.rankerRankWorker(shard)
+		}
+	}
+}
+
+// Shutdown 中止所有worker，关闭引擎
+func (engine *Engine) Shutdown() {
+	options := engine.initOptions
+	total := options.NumSegmenterThreads + 6*options.NumShards
+	for i := 0; i < total; i++ {
+		engine.shutdownChannel <- true
+	}
+
+	// 等待所有信号被消费完，即代表所有worker已退出
+	for {
+		runtime.Gosched()
+		if len(engine.shutdownChannel) == 0 {
+			return
 		}
 	}
 }
