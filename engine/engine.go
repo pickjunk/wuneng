@@ -358,12 +358,22 @@ func (engine *Engine) Search(request types.SearchRequest) (output types.SearchRe
 }
 
 // Segment 分词
-func (engine *Engine) Segment(text string) (tokens []string) {
+func (engine *Engine) Segment(text string, withSynonyms bool) (tokens []string) {
 	segments := engine.segmenter.Segment([]byte(text))
 	for _, s := range segments {
 		token := s.Token().Text()
-		if !engine.stopTokens.IsStopToken(token) {
-			tokens = append(tokens, s.Token().Text())
+
+		if engine.stopTokens.IsStopToken(token) {
+			continue
+		}
+		tokens = append(tokens, token)
+
+		if synonyms, ok := engine.synonyms.Synonyms[token]; ok && withSynonyms {
+			for _, ss := range *synonyms.synonymGroup {
+				if ss.text != token {
+					tokens = append(tokens, ss.text)
+				}
+			}
 		}
 	}
 	return

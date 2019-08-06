@@ -499,21 +499,47 @@ func TestEngineSegment(t *testing.T) {
 	var engine Engine
 	engine.Init(types.EngineInitOptions{
 		SegmenterDictionaries: "../test/test_dict.txt",
-		StopTokenFile: "../test/test_stop.txt",
+		SynonymTokenFile:      "../test/test_synonym.txt",
+		StopTokenFile:         "../test/test_stop.txt",
 	})
 	defer engine.Shutdown()
 
-	outputs := engine.Segment("百度")
+	outputs := engine.Segment("百度", false)
 	utils.Expect(t, "1", len(outputs))
 	utils.Expect(t, "百度", outputs[0])
 
-	outputs = engine.Segment("十三亿莆田广告")
+	outputs = engine.Segment("十三亿莆田广告", false)
 	utils.Expect(t, "3", len(outputs))
 	utils.Expect(t, "十三亿", outputs[0])
 	utils.Expect(t, "莆田", outputs[1])
 	utils.Expect(t, "广告", outputs[2])
 
-	outputs = engine.Segment("hello十三world")
+	outputs = engine.Segment("hello十三world", false)
+	utils.Expect(t, "1", len(outputs))
+	utils.Expect(t, "十三", outputs[0])
+
+	outputs = engine.Segment("百度", true)
+	utils.Expect(t, "4", len(outputs))
+	utils.Expect(t, "百度", outputs[0])
+	utils.Expect(t, "baidu", outputs[1])
+	utils.Expect(t, "广告", outputs[2])
+	utils.Expect(t, "莆田", outputs[3])
+
+	outputs = engine.Segment("十三亿莆田广告", true)
+	utils.Expect(t, "11", len(outputs))
+	utils.Expect(t, "十三亿", outputs[0])
+	utils.Expect(t, "都是沙雕", outputs[1])
+	utils.Expect(t, "包括我", outputs[2])
+	utils.Expect(t, "莆田", outputs[3])
+	utils.Expect(t, "百度", outputs[4])
+	utils.Expect(t, "baidu", outputs[5])
+	utils.Expect(t, "广告", outputs[6])
+	utils.Expect(t, "广告", outputs[7])
+	utils.Expect(t, "百度", outputs[8])
+	utils.Expect(t, "baidu", outputs[9])
+	utils.Expect(t, "莆田", outputs[10])
+
+	outputs = engine.Segment("hello十三world", true)
 	utils.Expect(t, "1", len(outputs))
 	utils.Expect(t, "十三", outputs[0])
 }
