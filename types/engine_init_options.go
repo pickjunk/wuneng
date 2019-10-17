@@ -79,7 +79,7 @@ type EngineInitOptions struct {
 func (options *EngineInitOptions) Init() {
 	if !options.NotUsingSegmenter {
 		if options.SegmenterDictionaries == "" {
-			log.Panic("字典文件不能为空")
+			log.Panic().Msg("字典文件不能为空")
 		}
 	}
 

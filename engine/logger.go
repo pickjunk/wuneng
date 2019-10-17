@@ -1,7 +1,7 @@
 package engine
 
 import (
-	b "github.com/pickjunk/bgo"
+	bl "github.com/pickjunk/bgo/log"
 )
 
-var log = b.Log.WithField("prefix", "wuneng.engine")
+var log = bl.New("wuneng.engine")

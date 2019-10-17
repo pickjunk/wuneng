@@ -1,7 +1,7 @@
 package core
 
 import (
-	b "github.com/pickjunk/bgo"
+	bl "github.com/pickjunk/bgo/log"
 )
 
-var log = b.Log.WithField("prefix", "wuneng.core")
+var log = bl.New("wuneng.core")

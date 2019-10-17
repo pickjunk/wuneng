@@ -36,7 +36,7 @@ func (sy *Synonyms) Init(synonymsTokenFile string) {
 	file, err := os.Open(synonymsTokenFile)
 	defer file.Close()
 	if err != nil {
-		log.Panic("Open stop token file error: ", err)
+		log.Panic().Msg("Open stop token file error: " + err.Error())
 	}
 
 	scanner := bufio.NewScanner(file)

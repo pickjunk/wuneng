@@ -53,7 +53,7 @@ type KeywordIndices struct {
 // Init 初始化索引器
 func (indexer *Indexer) Init(options types.IndexerInitOptions) {
 	if indexer.initialized == true {
-		log.Panic("索引器不能初始化两次")
+		log.Panic().Msg("索引器不能初始化两次")
 	}
 	options.Init()
 	indexer.initOptions = options
@@ -79,7 +79,7 @@ func (indexer *Indexer) getIndexLength(ti *KeywordIndices) int {
 // AddDocumentToCache 向 ADDCACHE 中加入一个文档
 func (indexer *Indexer) AddDocumentToCache(document *types.DocumentIndex, forceUpdate bool) {
 	if indexer.initialized == false {
-		log.Panic("索引器尚未初始化")
+		log.Panic().Msg("索引器尚未初始化")
 	}
 
 	indexer.addCacheLock.Lock()
@@ -133,7 +133,7 @@ func (indexer *Indexer) AddDocumentToCache(document *types.DocumentIndex, forceU
 // AddDocuments 向反向索引表中加入 ADDCACHE 中所有文档
 func (indexer *Indexer) AddDocuments(documents *types.DocumentsIndex) {
 	if indexer.initialized == false {
-		log.Panic("索引器尚未初始化")
+		log.Panic().Msg("索引器尚未初始化")
 	}
 
 	indexer.tableLock.Lock()
@@ -206,7 +206,7 @@ func (indexer *Indexer) AddDocuments(documents *types.DocumentsIndex) {
 // 返回值表示文档是否在索引表中被删除
 func (indexer *Indexer) RemoveDocumentToCache(docID uint64, forceUpdate bool) bool {
 	if indexer.initialized == false {
-		log.Panic("索引器尚未初始化")
+		log.Panic().Msg("索引器尚未初始化")
 	}
 
 	indexer.removeCacheLock.Lock()
@@ -243,7 +243,7 @@ func (indexer *Indexer) RemoveDocumentToCache(docID uint64, forceUpdate bool) bo
 // RemoveDocuments 向反向索引表中删除 REMOVECACHE 中所有文档
 func (indexer *Indexer) RemoveDocuments(documents *types.DocumentsID) {
 	if indexer.initialized == false {
-		log.Panic("索引器尚未初始化")
+		log.Panic().Msg("索引器尚未初始化")
 	}
 
 	indexer.tableLock.Lock()
@@ -304,7 +304,7 @@ func (indexer *Indexer) RemoveDocuments(documents *types.DocumentsID) {
 func (indexer *Indexer) Lookup(
 	tokens []string, labels []string, docIDs map[uint64]bool, countDocsOnly bool) (docs []types.IndexedDocument, numDocs int) {
 	if indexer.initialized == false {
-		log.Panic("索引器尚未初始化")
+		log.Panic().Msg("索引器尚未初始化")
 	}
 
 	if indexer.numDocuments == 0 {

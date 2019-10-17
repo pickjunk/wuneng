@@ -21,7 +21,7 @@ func (st *StopTokens) Init(stopTokenFile string) {
 
 	file, err := os.Open(stopTokenFile)
 	if err != nil {
-		log.Panic(err)
+		log.Panic().Err(err).Send()
 	}
 	defer file.Close()
 

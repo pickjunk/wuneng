@@ -1,7 +1,7 @@
 package types
 
 import (
-	b "github.com/pickjunk/bgo"
+	bl "github.com/pickjunk/bgo/log"
 )
 
-var log = b.Log.WithField("prefix", "wuneng.types")
+var log = bl.New("wuneng.types")
