@@ -28,3 +28,5 @@ require (
 	github.com/shirou/gopsutil v2.19.10+incompatible
 	golang.org/x/sys v0.0.0-20191113165036-4c7a9d0fe056 // indirect
 )
+
+go 1.13
