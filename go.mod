@@ -1,7 +1,5 @@
 module github.com/pickjunk/wuneng
 
-go 1.13
-
 require (
 	code.cloudfoundry.org/bytefmt v0.0.0-20190819182555-854d396b647c // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
