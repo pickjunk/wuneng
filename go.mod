@@ -33,3 +33,5 @@ require (
 	github.com/sirupsen/logrus v1.3.0
 	golang.org/x/sys v0.0.0-20190801041406-cbf593c0f2f3 // indirect
 )
+
+go 1.13
