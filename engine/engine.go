@@ -9,7 +9,7 @@ import (
 
 	"github.com/cloudfoundry/bytefmt"
 	"github.com/huichen/murmur"
-	"github.com/huichen/sego"
+	"github.com/pickjunk/sego"
 	"github.com/pickjunk/wuneng/core"
 	"github.com/pickjunk/wuneng/types"
 	"github.com/pickjunk/wuneng/utils"
