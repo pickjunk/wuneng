@@ -378,6 +378,20 @@ func (engine *Engine) Segment(text string, withSynonyms bool) (tokens []string) 
 	return
 }
 
+// Tokens 返回详细信息的分词
+func (engine *Engine) Tokens(text string) (tokens []*sego.Token) {
+	segments := engine.segmenter.Segment([]byte(text))
+	for _, s := range segments {
+		token := s.Token()
+
+		if engine.stopTokens.IsStopToken(token.Text()) {
+			continue
+		}
+		tokens = append(tokens, token)
+	}
+	return
+}
+
 // MemoryUsage 打印内存使用率
 func (engine *Engine) MemoryUsage() {
 	var m runtime.MemStats
