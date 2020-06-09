@@ -10,7 +10,8 @@ require (
 	github.com/huichen/murmur v0.0.0-20130808212358-e0489551cf51
 	github.com/onsi/ginkgo v1.10.3 // indirect
 	github.com/onsi/gomega v1.7.1 // indirect
-	github.com/pickjunk/brick v1.0.4
-	github.com/pickjunk/sego v0.0.0-20191207163142-b6d5b5c487ab
+	github.com/pickjunk/brick v1.0.11
+	github.com/pickjunk/sego v1.1.0
+	github.com/rs/zerolog v1.19.0 // indirect
 	github.com/shirou/gopsutil v2.19.11+incompatible
 )
