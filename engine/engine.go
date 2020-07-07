@@ -35,11 +35,9 @@ type Engine struct {
 	initOptions types.EngineInitOptions
 	initialized bool
 
-	indexers   []core.Indexer
-	rankers    []core.Ranker
-	segmenter  sego.Segmenter
-	stopTokens StopTokens
-	synonyms   *Synonyms
+	indexers  []core.Indexer
+	rankers   []core.Ranker
+	segmenter sego.Segmenter
 
 	// 建立索引器使用的通信通道
 	segmenterChannel         chan segmenterRequest
@@ -72,13 +70,6 @@ func (engine *Engine) Init(options types.EngineInitOptions) {
 	if !options.NotUsingSegmenter {
 		// 载入分词器词典
 		engine.segmenter.LoadDictionary(options.SegmenterDictionaries)
-
-		// 初始化停用词
-		engine.stopTokens.Init(options.StopTokenFile)
-
-		// 初始化同义词
-		engine.synonyms = &Synonyms{}
-		engine.synonyms.Init(options.SynonymTokenFile)
 	}
 
 	// 初始化索引器和排序器
@@ -257,10 +248,7 @@ func (engine *Engine) Search(request types.SearchRequest) (output types.SearchRe
 	if request.Text != "" {
 		querySegments := engine.segmenter.Segment([]byte(request.Text))
 		for _, s := range querySegments {
-			token := s.Token().Text()
-			if !engine.stopTokens.IsStopToken(token) {
-				tokens = append(tokens, s.Token().Text())
-			}
+			tokens = append(tokens, s.Token().Text())
 		}
 	} else {
 		for _, t := range request.Tokens {
@@ -357,23 +345,19 @@ func (engine *Engine) Search(request types.SearchRequest) (output types.SearchRe
 }
 
 // Segment 分词
-func (engine *Engine) Segment(text string, withSynonyms bool) (tokens []string) {
+func (engine *Engine) Segment(text string) (tokens []string) {
 	segments := engine.segmenter.Segment([]byte(text))
 	for _, s := range segments {
-		token := s.Token().Text()
+		tokens = append(tokens, s.Token().Text())
+	}
+	return
+}
 
-		if engine.stopTokens.IsStopToken(token) {
-			continue
-		}
-		tokens = append(tokens, token)
-
-		if synonyms, ok := engine.synonyms.Synonyms[token]; ok && withSynonyms {
-			for _, ss := range *synonyms.synonymGroup {
-				if ss.text != token {
-					tokens = append(tokens, ss.text)
-				}
-			}
-		}
+// FullSegment 分词
+func (engine *Engine) FullSegment(text string) (tokens []string) {
+	segments := engine.segmenter.FullSegment([]byte(text))
+	for _, s := range segments {
+		tokens = append(tokens, s.Token().Text())
 	}
 	return
 }
@@ -382,12 +366,7 @@ func (engine *Engine) Segment(text string, withSynonyms bool) (tokens []string) 
 func (engine *Engine) Tokens(text string) (tokens []*sego.Token) {
 	segments := engine.segmenter.Segment([]byte(text))
 	for _, s := range segments {
-		token := s.Token()
-
-		if engine.stopTokens.IsStopToken(token.Text()) {
-			continue
-		}
-		tokens = append(tokens, token)
+		tokens = append(tokens, s.Token())
 	}
 	return
 }

@@ -51,6 +51,8 @@ github.com/pickjunk/sego v0.0.0-20191207163142-b6d5b5c487ab h1:Ld+V7ieFwSRPqVIG9
 github.com/pickjunk/sego v0.0.0-20191207163142-b6d5b5c487ab/go.mod h1:npeYFDptNKlzUGv6mwkhgbU/7jrgCGdmO6pfMP/ZMkc=
 github.com/pickjunk/sego v1.1.0 h1:r5GIAnIT/5814lgZRyWMrrZup+G9VpjCjgHt0tVuE3g=
 github.com/pickjunk/sego v1.1.0/go.mod h1:npeYFDptNKlzUGv6mwkhgbU/7jrgCGdmO6pfMP/ZMkc=
+github.com/pickjunk/sego v1.2.0 h1:OGUHw0lAwLTtih/4wlD+yLqkdesJTEXoC18z4uRjIKQ=
+github.com/pickjunk/sego v1.2.0/go.mod h1:npeYFDptNKlzUGv6mwkhgbU/7jrgCGdmO6pfMP/ZMkc=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

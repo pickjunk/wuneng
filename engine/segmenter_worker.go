@@ -31,48 +31,25 @@ func (engine *Engine) segmenterWorker() {
 			numTokens := 0
 			if !engine.initOptions.NotUsingSegmenter && request.data.Content != "" {
 				// 当文档正文不为空时，优先从内容分词中得到关键词
-				segments := engine.segmenter.Segment([]byte(request.data.Content))
+				segments := engine.segmenter.FullSegment([]byte(request.data.Content))
 				for _, segment := range segments {
 					token := segment.Token().Text()
-					if !engine.stopTokens.IsStopToken(token) {
-						tokensMap[token] = append(tokensMap[token], segment.Start())
-					}
+					tokensMap[token] = append(tokensMap[token], segment.Start())
 				}
 				numTokens = len(segments)
 			} else {
 				// 否则载入用户输入的关键词
 				for _, t := range request.data.Tokens {
-					if !engine.stopTokens.IsStopToken(t.Text) {
-						tokensMap[t.Text] = t.Locations
-					}
+					tokensMap[t.Text] = t.Locations
 				}
 				numTokens = len(request.data.Tokens)
 			}
 
-			// 添加同义词
-			for key, pos := range tokensMap {
-				if synonyms, ok := engine.synonyms.Synonyms[key]; ok {
-					for _, ss := range *synonyms.synonymGroup {
-						tokensMap[ss.text] = pos
-					}
-					numTokens += len(*synonyms.synonymGroup) - 1
-				}
-			}
-
 			// 加入非分词的文档标签
 			for _, label := range request.data.Labels {
-				if !engine.initOptions.NotUsingSegmenter {
-					if !engine.stopTokens.IsStopToken(label) {
-						//当正文中已存在关键字时，若不判断，位置信息将会丢失
-						if _, ok := tokensMap[label]; !ok {
-							tokensMap[label] = []int{}
-						}
-					}
-				} else {
-					//当正文中已存在关键字时，若不判断，位置信息将会丢失
-					if _, ok := tokensMap[label]; !ok {
-						tokensMap[label] = []int{}
-					}
+				//当正文中已存在关键字时，若不判断，位置信息将会丢失
+				if _, ok := tokensMap[label]; !ok {
+					tokensMap[label] = []int{}
 				}
 			}
 
