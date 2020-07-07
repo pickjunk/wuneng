@@ -256,11 +256,11 @@ func TestFrequenciesIndex(t *testing.T) {
 	outputs := engine.Search(types.SearchRequest{Text: "中国人口"})
 	utils.Expect(t, "2", len(outputs.Docs))
 
-	utils.Expect(t, "5", outputs.Docs[0].DocID)
-	utils.Expect(t, "2311", int(outputs.Docs[0].Scores[0]*1000))
+	utils.Expect(t, "1", outputs.Docs[0].DocID)
+	utils.Expect(t, "2283", int(outputs.Docs[0].Scores[0]*1000))
 
-	utils.Expect(t, "1", outputs.Docs[1].DocID)
-	utils.Expect(t, "2211", int(outputs.Docs[1].Scores[0]*1000))
+	utils.Expect(t, "5", outputs.Docs[1].DocID)
+	utils.Expect(t, "2110", int(outputs.Docs[1].Scores[0]*1000))
 }
 
 func TestRemoveDocument(t *testing.T) {
@@ -499,47 +499,26 @@ func TestEngineSegment(t *testing.T) {
 	var engine Engine
 	engine.Init(types.EngineInitOptions{
 		SegmenterDictionaries: "../test/test_dict.txt",
-		SynonymTokenFile:      "../test/test_synonym.txt",
-		StopTokenFile:         "../test/test_stop.txt",
 	})
 	defer engine.Shutdown()
 
-	outputs := engine.Segment("百度", false)
+	outputs := engine.Segment("百度")
 	utils.Expect(t, "1", len(outputs))
-	utils.Expect(t, "百度", outputs[0])
+	utils.Expect(t, "[百度]", outputs)
 
-	outputs = engine.Segment("十三亿莆田广告", false)
+	outputs = engine.Segment("十三亿莆田广告")
 	utils.Expect(t, "3", len(outputs))
-	utils.Expect(t, "十三亿", outputs[0])
-	utils.Expect(t, "莆田", outputs[1])
-	utils.Expect(t, "广告", outputs[2])
+	utils.Expect(t, "[十三亿 莆田 广告]", outputs)
 
-	outputs = engine.Segment("hello十三world", false)
+	outputs = engine.Segment("hello十三world")
 	utils.Expect(t, "1", len(outputs))
-	utils.Expect(t, "十三", outputs[0])
+	utils.Expect(t, "[十三]", outputs)
 
-	outputs = engine.Segment("百度", true)
-	utils.Expect(t, "4", len(outputs))
-	utils.Expect(t, "百度", outputs[0])
-	utils.Expect(t, "baidu", outputs[1])
-	utils.Expect(t, "广告", outputs[2])
-	utils.Expect(t, "莆田", outputs[3])
+	outputs = engine.FullSegment("百度")
+	utils.Expect(t, "6", len(outputs))
+	utils.Expect(t, "[百 度 baidu 广告 莆田 百度]", outputs)
 
-	outputs = engine.Segment("十三亿莆田广告", true)
-	utils.Expect(t, "11", len(outputs))
-	utils.Expect(t, "十三亿", outputs[0])
-	utils.Expect(t, "都是沙雕", outputs[1])
-	utils.Expect(t, "包括我", outputs[2])
-	utils.Expect(t, "莆田", outputs[3])
-	utils.Expect(t, "百度", outputs[4])
-	utils.Expect(t, "baidu", outputs[5])
-	utils.Expect(t, "广告", outputs[6])
-	utils.Expect(t, "广告", outputs[7])
-	utils.Expect(t, "百度", outputs[8])
-	utils.Expect(t, "baidu", outputs[9])
-	utils.Expect(t, "莆田", outputs[10])
-
-	outputs = engine.Segment("hello十三world", true)
-	utils.Expect(t, "1", len(outputs))
-	utils.Expect(t, "十三", outputs[0])
+	outputs = engine.FullSegment("十三亿莆田广告")
+	utils.Expect(t, "19", len(outputs))
+	utils.Expect(t, "[十 三 十三 亿 都是沙雕 包括我 十三亿 莆 田 百度 baidu 广告 莆田 广 告 百度 baidu 莆田 广告]", outputs)
 }
