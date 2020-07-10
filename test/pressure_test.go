@@ -12,7 +12,6 @@ func TestTenThousandsInitAndShutdown(t *testing.T) {
 		var engine eng.Engine
 		engine.Init(types.EngineInitOptions{
 			SegmenterDictionaries: "./test_dict.txt",
-			SynonymTokenFile:      "./test_synonym.txt",
 		})
 
 		docID := uint64(1)
