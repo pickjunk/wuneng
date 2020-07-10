@@ -450,7 +450,6 @@ func TestEngineIndexDocumentWithSynonyms(t *testing.T) {
 	var engine Engine
 	engine.Init(types.EngineInitOptions{
 		SegmenterDictionaries: "../test/test_dict.txt",
-		SynonymTokenFile:      "../test/test_synonym.txt",
 		DefaultRankOptions: &types.RankOptions{
 			ScoringCriteria: TestScoringCriteria{},
 		},
