@@ -371,6 +371,15 @@ func (engine *Engine) Tokens(text string) (tokens []*sego.Token) {
 	return
 }
 
+// FullTokens 返回详细信息的分词
+func (engine *Engine) FullTokens(text string) (tokens []*sego.Token) {
+	segments := engine.segmenter.FullSegment([]byte(text))
+	for _, s := range segments {
+		tokens = append(tokens, s.Token())
+	}
+	return
+}
+
 // MemoryUsage 打印内存使用率
 func (engine *Engine) MemoryUsage() {
 	var m runtime.MemStats
