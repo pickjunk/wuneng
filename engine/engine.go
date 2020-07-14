@@ -364,7 +364,7 @@ func (engine *Engine) FullSegment(text string) (tokens []string) {
 
 // Tokens 返回详细信息的分词
 func (engine *Engine) Tokens(text string) (tokens []*sego.Token) {
-	segments := engine.segmenter.FullSegment([]byte(text))
+	segments := engine.segmenter.Segment([]byte(text))
 	for _, s := range segments {
 		tokens = append(tokens, s.Token())
 	}
